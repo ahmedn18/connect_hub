@@ -35,7 +35,22 @@ public class UserManager {
     private void loadUsersFromJson(String filePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            userMap = objectMapper.readValue(new File(filePath), new TypeReference<Map<String, User>>() {});
+            userMap = objectMapper.readValue(new File(filePath), new TypeReference<Map<String, User>>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Saves the current user map to the specified JSON file.
+     *
+     * @param filePath the path to the JSON file where the user data will be saved
+     */
+    public void saveUsersToJson(String filePath) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            objectMapper.writeValue(new File(filePath), userMap);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,7 +59,7 @@ public class UserManager {
     /**
      * Signs up a new user with the given user ID and password.
      *
-     * @param userId the user ID of the new user
+     * @param userId   the user ID of the new user
      * @param password the password of the new user
      * @return true if the sign-up is successful, false if the user ID already exists
      * @throws NoSuchAlgorithmException if the SHA-256 algorithm is not available
@@ -61,7 +76,7 @@ public class UserManager {
     /**
      * Logs in a user with the given user ID and password.
      *
-     * @param userId the user ID of the user
+     * @param userId   the user ID of the user
      * @param password the password of the user
      * @return true if the login is successful, false if the user ID or password is incorrect
      * @throws NoSuchAlgorithmException if the SHA-256 algorithm is not available
@@ -100,4 +115,15 @@ public class UserManager {
         User user = userMap.get(userId);
         return user != null && user.isOnline();
     }
+
+    /**
+     * Retrieves the user with the specified user ID.
+     *
+     * @param userId the user ID of the user to retrieve
+     * @return the `User` object corresponding to the given user ID, or null if the user does not exist
+     */
+    public User getUserWithId(String userId) {
+        return userMap.get(userId);
+    }
+
 }
